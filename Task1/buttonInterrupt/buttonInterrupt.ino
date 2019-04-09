@@ -7,7 +7,7 @@ volatile int led_state = LOW;
 
 void setup() {
   pinMode(led_pin, OUTPUT);
-  pinMode(button_pin, INPUT);
+  pinMode(button_pin,  INPUT_PULLUP);
 
   attachInterrupt(button_pin, blink_led, RISING);
 
@@ -18,5 +18,5 @@ void loop() {
 }
 
 void blink_led(){
-  led_state = ! led_state;
+  led_state = !led_state;
 }
