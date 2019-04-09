@@ -1,11 +1,23 @@
 //TODO: A-1.3 with internal pullup
 
-void setup() {
-  // put your setup code here, to run once:
+const int led_pin = 7;
+const int button_pin = 3;
 
+int ledState = LOW;
+int lastBState = HIGH;
+
+void setup() {
+  pinMode(led_pin, OUTPUT);
+  pinMode(button_pin, INPUT_PULLUP);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  int bState = digitalRead(button_pin);
 
+  if(bState == LOW && lastBState == HIGH) {
+    digitalWrite(led_pin, ledState);
+    ledState = !ledState;
+  }
+
+  lastBState = bState;
 }
