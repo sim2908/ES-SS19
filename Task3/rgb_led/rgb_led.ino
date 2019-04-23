@@ -1,62 +1,53 @@
-#include <vector>
 
-std::vector<String> splitString(String s, String delimiter) {
-  int len = s.length();
-  std::vector<String> ss;
-  int idx = -1;
-  int last_idx = 0;
-  
-  while ((idx = s.indexOf(delimiter, last_idx)) != -1 && last_idx < len) {
-    String part = s.substring(last_idx, idx);
-    
-    ss.push_back(part);
+const String methods[3] = {"setRGB", "RGBon", "RGBoff"};
 
-    last_idx = idx + 1;
-  }
+const uint8_t led_red = 11;
+const uint8_t led_green = 8;
+const uint8_t led_blue = 7;
 
-  if (last_idx < len) {
-    String part = s.substring(last_idx, len);
+int red = 128;
+int blue = 128;
+int green = 128;
 
-    ss.push_back(part);
-  }
-
-  return ss;
-}
-
-void parseInput(String s) {
-  s.trim();
-  s.replace(" ", "");
-
-  int len = s.length();
-
-  if (s.startsWith("setRGB(") && s.endsWith(")") && len > 8) {
-    String params = s.substring(7, len - 1);
-  } else if (s.equals("RGBon()")) {
-    ;
-  } else if (s.equals("RGBoff()")) {
-    ;
-  }
-}
+boolean led_enabled = true;
 
 void setup() {
   Serial.begin(9600);
+  updateRGB();
+  Serial.println("-----Start-----");
 }
 
 void loop() {
-  while (Serial.available() > 0) {
-    String s = Serial.readStringUntil('\n');
 
-    //parseInput(s);
+  String input = getSerial();
 
-    Serial.write(">");
+  input.trim();
 
-    std::vector<String> parts = splitString(s, ",");
+  if (input.startsWith(methods[0])) {
+    Serial.println(input + " matches " + methods[0] + "");
 
-    for (std::vector<String>::iterator i = parts.begin(); i < parts.end(); i++) {
-      Serial.write((*i).c_str());
+
+  } else if (input.startsWith(methods[1])) {
+    if (input.length() != 7 || !input.endsWith("()")) {
+      printError(methods[1], input);
+      } else {
+      Serial.println("'" + input + "' matched method name " + methods[1]);
+      led_enabled = true;
     }
 
-    Serial.write("\n");
+  } else if (input.startsWith(methods[2])) {
+    if (input.length() != 8 || !input.endsWith("()")) {
+      printError(methods[2], input);
+    } else {
+      Serial.println("'" + input + "' matched method name " + methods[2]);
+      led_enabled = false;
+    }
+
+  } else {
+    Serial.println(input + " matches no method");
   }
+
+  updateRGB();
+
 }
 
