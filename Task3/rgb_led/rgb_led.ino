@@ -11,6 +11,12 @@ int green = 128;
 
 boolean led_enabled = true;
 
+
+// setRGB(0.4,0.5,0.0)
+// setRGB(1,1,1)
+// RGBon()
+// RGBoff()
+
 void setup() {
   Serial.begin(9600);
   updateRGB();
@@ -18,23 +24,25 @@ void setup() {
 }
 
 void loop() {
-
   String input = getSerial();
 
   input.trim();
+  input.replace(" ", "");
 
-  if (input.startsWith(methods[0])) {
-    Serial.println(input + " matches " + methods[0] + "");
+  Serial.println("_________________________________________________________");
 
+  if (input.startsWith(methods[0] + "(")) {
+    if (isValid(input)) {
+      Serial.println("'" + input + "' matched method name " + methods[0]);
+    }
 
   } else if (input.startsWith(methods[1])) {
     if (input.length() != 7 || !input.endsWith("()")) {
       printError(methods[1], input);
-      } else {
+    } else {
       Serial.println("'" + input + "' matched method name " + methods[1]);
       led_enabled = true;
     }
-
   } else if (input.startsWith(methods[2])) {
     if (input.length() != 8 || !input.endsWith("()")) {
       printError(methods[2], input);
@@ -48,6 +56,5 @@ void loop() {
   }
 
   updateRGB();
-
 }
 
