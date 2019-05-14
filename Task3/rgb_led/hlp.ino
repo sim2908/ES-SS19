@@ -16,7 +16,6 @@ void updateRGB() {
   }
 }
 
-
 void setRGB(int r, int g, int b) {
   
   char logString[100];
@@ -25,11 +24,10 @@ void setRGB(int r, int g, int b) {
 
   Serial.println(logString);
 
-  analogWrite(led_red, r);
-  analogWrite(led_green, g);
-  analogWrite(led_blue, b);
+  analogWrite(led_red, 255 - r);
+  analogWrite(led_green, 255 - g);
+  analogWrite(led_blue, 255 - b);
 }
-
 
 void printError(String methodString, String inputString) {
   const char* method = methodString.c_str();

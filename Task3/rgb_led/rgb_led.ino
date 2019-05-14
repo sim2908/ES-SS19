@@ -11,7 +11,6 @@ int green = 128;
 
 boolean led_enabled = true;
 
-
 // setRGB(0.4,0.5,0.0)
 // setRGB(1,1,1)
 // RGBon()
@@ -29,7 +28,7 @@ void loop() {
   input.trim();
   input.replace(" ", "");
 
-  Serial.println("_________________________________________________________");
+  Serial.println("______________________________________________________________________________________");
 
   if (input.startsWith(methods[0] + "(")) {
     if (isValid(input)) {
