@@ -35,7 +35,7 @@ void setup() {
 void loop() {
   if (handleButtons()) {
     processChanges();
-    }
+  }
 }
 
 void processChanges() {
@@ -45,12 +45,12 @@ void processChanges() {
 
   Serial.println(logString);
 
-  if(directionMode) {
-    setRGB(0,255,0);
-    } else {
-      setRGB(255,0,0);
-      }
+  if (directionMode) {
+    setRGB(0, 255, 0);
+  } else {
+    setRGB(255, 0, 0);
+  }
 
   setGeschwindigkeit(sonic);
-  setDrehrichtung(tails);  
-  }
+  setDrehrichtung(tails);
+}

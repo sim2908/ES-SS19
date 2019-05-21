@@ -48,7 +48,7 @@ void debounceButton3(void) {
 
   if (read_state != debounced_button_state3) {
     debounce_counter3++;
-    
+
     if (debounce_counter3 > 5) {
       debounce_counter3 = 0;
 
@@ -77,7 +77,7 @@ boolean handleButtons() {
     button2();
   } else {
     res = false;
-    }
+  }
 
   last_button_state1 = debounced_button_state1;
   last_button_state2 = debounced_button_state2;
