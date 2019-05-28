@@ -1,4 +1,4 @@
-const PARAM_BUF_LEN = 10;
+const int PARAM_BUF_LEN = 10;
 
 void handleInput(String s) {
 	String param_buf[PARAM_BUF_LEN];
@@ -48,8 +48,8 @@ String parseCall(String s, String param_buf[], int param_buf_len) {
 		return "";
 	}
 	
-	String name = substring(0, name_end_idx);
-	String params = substring(name_end_idx + 1, param_end_idx);
+	String name = s.substring(0, name_end_idx);
+	String params = s.substring(name_end_idx + 1, param_end_idx);
 	
 	int param_cnt = splitString(params, ",", param_buf, param_buf_len);
 	
