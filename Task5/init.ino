@@ -46,9 +46,6 @@ const uint8_t PWCTR4 = 0xC3;            //Power Control 4
 const uint8_t PWCTR5 = 0xC4;            //Power Control 5
 const uint8_t VMCTR1 = 0xC5;            //VCOM Voltage setting
 
-const uint16_t black = 0x0000;
-const uint16_t white = 0xFFFF;
-
 //global variables
 uint8_t invState = 0;
 
@@ -65,9 +62,6 @@ void initBuffer() {
 }
 
 
-
-
-
 void writeBuffer() {
   uint8_t xs = 2;
   uint8_t xe = 129;
@@ -82,13 +76,13 @@ void writeBuffer() {
   SPI.transfer(TFT_CS, 0x00); SPI.transfer(TFT_CS, ys);
   SPI.transfer(TFT_CS, 0x00); SPI.transfer(TFT_CS, ye);
   TFTwriteCommand(RAMWR);  //assigne background-color to every element of writewindow
-  for (uint16_t x = 0; x < 128; x++) {
-    for (uint16_t y = 0; y < 160; y++) {
+  for (uint16_t y = 0; y < 160; y++) {
+    for (uint16_t x = 0; x < 128; x++) {
 
       uint16_t pixel = getPixel(x, y);
 
-      byte low = pixel & 0xff;
-      byte high = (pixel >> 8) & 0xff;
+      byte low = pixel & 0xFF;
+      byte high = (pixel >> 8) & 0xFF;
 
       SPI.transfer(TFT_CS, high);
       SPI.transfer(TFT_CS, low);
@@ -99,9 +93,11 @@ void writeBuffer() {
 }
 
 uint16_t getPixel(int x, int y) {
-
   return dBuffer[x][y];
+}
 
+void  setPixel(int x, int y, uint16_t color) {
+  dBuffer[x][y] = color;
 }
 
 uint16_t getColor(double r, double g, double b) {
@@ -208,27 +204,5 @@ void setupDisplay() {
   TFTinit();
   Serial.println("Display Initialized");
   delay(100);
-
-  //clear display
-  uint8_t xs = FIRST_COL;
-  uint8_t xe = LAST_COL;
-  uint8_t ys = FIRST_ROW;
-  uint8_t ye = LAST_ROW;
-  uint16_t time = millis();
-  SPI.beginTransaction(TFT_CS, settingsTFT);
-  TFTwriteCommand(CASET); //define writewindow column-range
-  SPI.transfer(TFT_CS, 0x00); SPI.transfer(TFT_CS, xs);
-  SPI.transfer(TFT_CS, 0x00); SPI.transfer(TFT_CS, xe);
-  TFTwriteCommand(RASET); //define writewindow row-range
-  SPI.transfer(TFT_CS, 0x00); SPI.transfer(TFT_CS, ys);
-  SPI.transfer(TFT_CS, 0x00); SPI.transfer(TFT_CS, ye);
-  TFTwriteCommand(RAMWR);  //assigne background-color to every element of writewindow
-  for (uint16_t i = 0; i < (xe + 1 - xs) * (ye + 1 - ys); i++) {
-    SPI.transfer(TFT_CS, 0xFF);
-    SPI.transfer(TFT_CS, 0xFF);
-  }
-  SPI.endTransaction();
-  time = millis() - time;
-  Serial.print("time consumption of clear-display: "); Serial.print(time, DEC); Serial.println(" ms");
 
 }

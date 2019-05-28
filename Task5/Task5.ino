@@ -1,13 +1,16 @@
+
+const uint16_t black = 0x0000;
+const uint16_t white = 0xFFFF;
+
+
 void setup() {
   setupDisplay();
-
-
-  Serial.println(getColor(0,0,1), BIN);
-  Serial.println(getColor(1,0,1), BIN);
-  Serial.println(getColor(1,1,1), BIN);
+  initBuffer();
+  writeBuffer();
 }
 
 void loop() {
-  writeBuffer();
   delay(2000);
+  writeString(5,75,"Press F in chat");
+  writeBuffer();
 }
