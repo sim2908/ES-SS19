@@ -110,3 +110,53 @@ float toValidatedFloat(String s) {
 	
 	return s.toFloat();
 }
+
+
+
+
+
+
+
+//===================================================
+
+
+
+void outputImageToLCD(String image_data) {
+	String lines[2];
+	String dimensions[2];
+	String pixels[128 * 160];
+	
+	if (splitString(s, "\n", lines, 2 == -1)) {
+		//TODO: Error couldn't parse image data
+		
+		return;
+	}
+	
+	if (splitString(lines[0], ",", dimensions, 2) != -1) {
+		//TODO: Error couldn't parse image data
+		
+		return;
+	}
+	
+	if (splitString(lines[1], ",", pixels, 128 * 160) != -1) {
+		//TODO: Error couldn't parse image data
+		
+		return;
+	}
+	
+	int width = dimensions[0].toInt();
+	int height = dimensions[1].toInt();
+	
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			int idx = x + y * width;
+			int val = pixels[idx].toInt();
+			
+			if (val == 1) {
+				//TODO: Implement
+			} else if (val == 0) {
+				//TODO: Implement
+			}
+		}
+	}
+}
