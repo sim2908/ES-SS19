@@ -130,7 +130,7 @@ void TFTwriteCommand(uint8_t cmd) {
   TFT_DC_HIGH();
 }
 
-void TFTinit(void) {
+void TFTinit(void) {Serial.begin(9600);
   //minimal configuration: only settings which are different from Reset Default Value
   //or not affected by HW/SW-reset
   SPI.beginTransaction(TFT_CS, settingsTFT);
