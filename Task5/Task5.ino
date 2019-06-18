@@ -1,3 +1,4 @@
+#include <DueTimer.h>
 
 /*
    Display = 128 * 160
@@ -15,6 +16,9 @@ const uint16_t width = 128;
 
 const uint16_t black = 0x0000;
 const uint16_t white = 0xFFFF;
+
+DueTimer timer;
+int tCounter;
 
 
 void setup() {
@@ -61,26 +65,99 @@ void task22() {
   }
 }
 
+void startTask3() {
+  tCounter = 0;
+  if (timer.configure(10, task3)) {
+    timer.start();
+  }
+}
 
 void task3() {
-  runStudentIdDemo("Alexander Herms", "13374269");
-  writeBuffer();
-  initBuffer();
-  delay(5000);
-  runStudentIdDemo("Katharina Goetz", "12345611");
-  writeBuffer();
-  initBuffer();
-  delay(5000);
-  runStudentIdDemo("Hannes Boczek", "4206969420");
-  writeBuffer();
-  initBuffer();
-  delay(5000);
+
+  switch (tCounter) {
+    case 0:
+      initBuffer();
+      runStudentIdDemo("Alexander Herms", "13374269");
+      break;
+    case 10:
+      initBuffer();
+      runStudentIdDemo("Katharina Goetz", "12345611");
+      break;
+    case 20:
+      initBuffer();
+      runStudentIdDemo("Johannes Boczek", "4206969420");
+      break;
+  }
+
+  tCounter = (tCounter + 1) % 30;
+}
+
+void stopTimers() {
+  timer.stop();
 }
 
 void task4() {
 
-  String s = getSerial();
-  handleInput(s);
-  
-  
+  String readInput;
+  if (Serial.available() > 0) {
+    readInput = Serial.readString();
   }
+
+  if (readInput.length() > 0) {
+    Serial.println("________________________________________");
+    Serial.println("INPUT: " + readInput);
+    handleInput(readInput);
+  }
+
+  writeBuffer();
+}
+
+void startRotatingBarDemo() {
+  tCounter = 0;
+  if (timer.configure(10, rotatingBarDemo)) {
+    timer.start();
+  }
+}
+
+void rotatingBarDemo() {
+
+  int offsetY1 = 68;
+  int offsetY2 = 76;
+  int offsetY3 = 84;
+
+  String s1 = "";
+  String s2 = "";
+  String s3 = "";
+
+  initBuffer();
+
+  switch (tCounter) {
+    case 0:
+      s1 = " | ";
+      s2 = " | ";
+      s3 = " | ";
+      break;
+    case 1:
+      s1 = "  /";
+      s2 = " / ";
+      s3 = "/  ";
+      break;
+    case 2:
+      s1 = "   ";
+      s2 = "---";
+      s3 = "   ";
+      break;
+    case 3:
+      s1 = "\\  ";
+      s2 = " \\ ";
+      s3 = "  \\";
+      break;
+  }
+
+  writeStringCentered(s1, offsetY1);
+  writeStringCentered(s2, offsetY2);
+  writeStringCentered(s3, offsetY3);
+
+  tCounter = (tCounter + 1) % 4;
+
+}

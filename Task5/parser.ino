@@ -10,7 +10,9 @@ void handleInput(String s) {
     String param = param_buf[0];
     float val = toValidatedFloat(param);
 
-    if (val == -1.0) {
+    if (val >= 0.0 && val <= 1.0) {
+      /// setContrast(val * );
+    } else if (val == -1.0) {
       //TODO: Error invalid contrast param
     } else if (val < 0.0 || val > 1.0) {
       //TODO: Error contrast out of range
@@ -22,12 +24,13 @@ void handleInput(String s) {
     writeBuffer();
     //TODO: Clear Message
   } else if (func == "runRotatingBarDemo") {
-    //TODO: Implement
+    startRotatingBarDemo();
+    //TODO: Message
   } else if (func == "runStudentIdDemo") {
-    task3();
-    //TODO: Repeat? / Message
+    startTask3();
+    //TODO: Message
   } else if (func == "stopDemo") {
-    //TODO: Implement
+    stopTimers();
   } else if (func == "") {
     //TODO: Error couldn't parse
   } else {

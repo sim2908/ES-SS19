@@ -53,6 +53,14 @@ uint8_t invState = 0;
 
 uint16_t dBuffer[128][160];
 
+
+void setContrast(uint8_t val) {
+  SPI.beginTransaction(TFT_CS, settingsTFT);
+  TFTwriteCommand(VMCTR1);
+  SPI.transfer(TFT_CS, val);
+  SPI.endTransaction();
+  }
+
 void initBuffer() {
   for (uint16_t x = 0; x < 128; x++) {
     for (uint16_t y = 0; y < 160; y++) {
@@ -186,8 +194,8 @@ void setupDisplay() {
 
   // initialize serial port 0
   Serial.begin(9600);
-  Serial.println("Exercise no.5 template\n");
 
+  Serial.println("Exercise no.5 template\n");
   // initialize SPI:
   // several devices: multiple SPI.begin(nn_CS) possible
   SPI.begin(TFT_CS);
