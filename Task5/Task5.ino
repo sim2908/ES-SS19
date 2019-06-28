@@ -161,3 +161,17 @@ void rotatingBarDemo() {
   tCounter = (tCounter + 1) % 4;
 
 }
+
+
+
+
+
+
+// =============================
+
+
+
+void printErrorMessage(String message) {
+	Serial.print("Error: ");
+	Serial.println(message);
+}

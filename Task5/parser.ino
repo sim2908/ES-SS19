@@ -13,9 +13,9 @@ void handleInput(String s) {
     if (val >= 0.0 && val <= 1.0) {
       /// setContrast(val * );
     } else if (val == -1.0) {
-      //TODO: Error invalid contrast param
+      printErrorMessage("Invalid contrast parameter");
     } else if (val < 0.0 || val > 1.0) {
-      //TODO: Error contrast out of range
+	  printErrorMessage("Contrast out of range");
     }
 
     //TODO: Implement
@@ -32,9 +32,9 @@ void handleInput(String s) {
   } else if (func == "stopDemo") {
     stopTimers();
   } else if (func == "") {
-    //TODO: Error couldn't parse
+    printErrorMessage("Invalid input - not a function call");
   } else {
-    //TODO: Error no matching function
+    printErrorMessage("No matching function");
   }
 }
 
@@ -45,11 +45,11 @@ String parseCall(String s, String param_buf[], int param_buf_len) {
   int param_end_idx = s.indexOf(")");
 
   if (name_end_idx == -1 || param_end_idx == -1 || name_end_idx > param_end_idx) {
-    //TODO: Error wrong parentheses
+    printErrorMessage("Wrong parentheses - function call pattern is: func(params)");
 
     return "";
   } else if (param_end_idx + 1 != s.length()) {
-    //TODO: Error no characters after closing parentheses allowed
+	  printErrorMessage("No characters after closing parentheses allowed");
 
     return "";
   }
@@ -60,7 +60,7 @@ String parseCall(String s, String param_buf[], int param_buf_len) {
   int param_cnt = splitString(params, ",", param_buf, param_buf_len);
 
   if (param_cnt == -1) {
-    //TODO: Error too many params
+    printErrorMessage("Too many parameters");
 
     return "";
   }
@@ -146,19 +146,19 @@ void outputImageToLCD(String image_data) {
 
   if (splitString(image_data
                   , "\n", lines, 2 == -1)) {
-    //TODO: Error couldn't parse image data
+    printErrorMessage("Invalid image data");
 
     return;
   }
 
   if (splitString(lines[0], ",", dimensions, 2) != -1) {
-    //TODO: Error couldn't parse image data
+    printErrorMessage("Invalid image data");
 
     return;
   }
 
   if (splitString(lines[1], ",", pixels, 128 * 160) != -1) {
-    //TODO: Error couldn't parse image data
+    printErrorMessage("Invalid image data");
 
     return;
   }
