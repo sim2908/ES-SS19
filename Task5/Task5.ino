@@ -175,3 +175,20 @@ void printErrorMessage(String message) {
 	Serial.print("Error: ");
 	Serial.println(message);
 }
+
+void printInfoMessage(String message) {
+	Serial.print("--- ");
+	Serial.print(message);
+	Serial.printön(" ---");
+}
+
+void printHelpMessage() {
+	Serial.println("-----");
+	Serial.println("help() - Displays this message");
+	Serial.println("setContrast(val) - Sets the contrast to a value between 0 and 1");
+	Serial.println("clearDisplay() - Clears the display");
+	Serial.println("runRotatingBarDemo() - Starts the rotating bar demo");
+	Serial.println("runStudentIdDemo() - Starts the student ID demo");
+	Serial.println("stopDemo() - Stops any running demo");
+	Serial.println("-----");
+}

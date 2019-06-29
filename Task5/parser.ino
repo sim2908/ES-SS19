@@ -5,32 +5,32 @@ void handleInput(String s) {
   String func = parseCall(s, param_buf, PARAM_BUF_LEN);
 
   if (func == "help") {
-    //TODO: Implement
+    printHelpMessage();
   } else if (func == "setContrast") {
     String param = param_buf[0];
     float val = toValidatedFloat(param);
 
     if (val >= 0.0 && val <= 1.0) {
-      /// setContrast(val * );
+      //TODO: setContrast(val * );
+	  printInfoMessage("Contrast changed");
     } else if (val == -1.0) {
       printErrorMessage("Invalid contrast parameter");
     } else if (val < 0.0 || val > 1.0) {
 	  printErrorMessage("Contrast out of range");
     }
-
-    //TODO: Implement
   } else if (func == "clearDisplay") {
     initBuffer();
     writeBuffer();
-    //TODO: Clear Message
+    printInfoMessage("Display cleared");
   } else if (func == "runRotatingBarDemo") {
     startRotatingBarDemo();
-    //TODO: Message
+    printInfoMessage("Started rotating bar demo");
   } else if (func == "runStudentIdDemo") {
     startTask3();
-    //TODO: Message
+    printInfoMessage("Started student ID demo");
   } else if (func == "stopDemo") {
     stopTimers();
+	printInfoMessage("Demo stopped");
   } else if (func == "") {
     printErrorMessage("Invalid input - not a function call");
   } else {
