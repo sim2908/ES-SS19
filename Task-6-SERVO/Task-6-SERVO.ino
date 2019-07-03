@@ -5,9 +5,15 @@
 #include <Servo.h>
 #include <DueTimer.h>
 
+const uint8_t led_pin = -1;
+
 const uint8_t joyX_pin = 8;
 const uint8_t joyY_pin = 9;
+
 const uint8_t joyButton = 47;
+const uint8_t playButton = -1;
+const uint8_t ledButton = -1;
+
 
 const uint8_t s1_pin = 2;
 const uint8_t s2_pin = 3;
@@ -15,11 +21,23 @@ const uint8_t s2_pin = 3;
 volatile bool pressed = false;
 
 DueTimer timer;
-volatile int debounce_counter = 0;
-volatile int debounced_button_state = HIGH;
-int last_button_state = HIGH;
 
-boolean servoRState = false;
+volatile int debounce_counter_rst = 0;
+volatile int debounced_button_state_rst = HIGH;
+int last_button_state_rst = HIGH;
+
+volatile int debounce_counter_joy = 0;
+volatile int debounced_button_state_joy = HIGH;
+int last_button_state_joy = HIGH;
+
+volatile int debounce_counter_play = 0;
+volatile int debounced_button_state_play = HIGH;
+int last_button_state_play = HIGH;
+
+volatile int debounce_counter_led = 0;
+volatile int debounced_button_state_led = HIGH;
+int last_button_state_led = HIGH;
+
 
 Servo servoB;
 Servo servoT;
@@ -33,9 +51,13 @@ void setup() {
   pinMode(s1_pin, OUTPUT);
   pinMode(s2_pin, OUTPUT);
 
-  pinMode(joyButton, INPUT_PULLUP);
+  pinMode(led_pin, OUTPUT);
 
-  if (timer.configure(100, debounceButton)) {
+  pinMode(joyButton, INPUT_PULLUP);
+  pinMode(playButton, INPUT_PULLUP);
+  pinMode(ledButton, INPUT_PULLUP);
+
+  if (timer.configure(100, debounceButtons)) {
     timer.start();
   }
 
@@ -45,73 +67,33 @@ void setup() {
 
 void loop() {
 
-  Serial.println("Start");
-
   handleButton();
 
-  if (servoRState) {
+  servoT.write(servoTAngle);
+  servoB.write(servoBAngle);
 
-    Serial.println("R");
-
-    servoT.write(servoTAngle);
-    servoB.write(servoBAngle);
-
-    servoTAngle = max(min(servoTAngle + relativeJoyToServo(joyX_pin), 180), 0);
-    servoBAngle = max(min(servoBAngle + relativeJoyToServo(joyY_pin), 180), 0);
-
-
-  } else {
-
-    Serial.println("D");
-    directJoyToServo(joyX_pin, servoB);
-    directJoyToServo(joyY_pin, servoT);
-  }
-
-
+  servoTAngle = max(min(servoTAngle + relativeJoyToServo(joyX_pin), 180), 0);
+  servoBAngle = max(min(servoBAngle + relativeJoyToServo(joyY_pin), 180), 0);
 
   delay(15);
 }
 
-
-void directJoyToServo(int pin, Servo servo) {
-  float f = (float) analogRead(pin);
-  int angle = map(f, 0, 1023, 0, 180);
-  servo.write(angle);
-}
-
-int relativeJoyToServo(int pin) {
-  float f = (float) analogRead(pin);
-
-  if (!(f > 562|| f < 462)) {
-    return 0;
-    }
-  
-  int angle = map(f, 0, 1023, -5, 5);
-  return angle;
-}
-
-void debounceButton(void) {
-  int read_state = digitalRead(joyButton);
-
-  if (read_state != debounced_button_state) {
-    debounce_counter++;
-
-    if (debounce_counter > 5) {
-      debounce_counter = 0;
-
-      debounced_button_state = read_state;
-    }
-  } else {
-    debounce_counter = 0;
-  }
-}
-
 void handleButton () {
-  if (debounced_button_state == LOW && last_button_state == HIGH) {
-    servoRState = !servoRState;
-    servoBAngle = 90;
-    servoTAngle = 90;
+  if (debounced_button_state_joy == LOW && last_button_state_joy == HIGH) {
+    savePos();
+  }
+  if (debounced_button_state_rst == LOW && last_button_state_rst == HIGH) {
+    deletePos();
+  }
+  if (debounced_button_state_led == LOW && last_button_state_led == HIGH) {
+    digitalWrite(led_pin,!digitalRead(led_pin));
+  }
+  if (debounced_button_state_play == LOW && last_button_state_play == HIGH) {
+    //playSequence();
   }
 
-  last_button_state = debounced_button_state;
+  last_button_state_joy = debounced_button_state_joy;
+  last_button_state_play = debounced_button_state_play;
+  last_button_state_rst = debounced_button_state_rst;
+  last_button_state_led = debounced_button_state_led;
 }
