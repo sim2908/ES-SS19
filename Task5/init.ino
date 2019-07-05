@@ -1,7 +1,3 @@
-#include <SPI.h>
-#include <SD.h>
-
-
 //pin declarationswriteBuffer
 #define TFT_CS     10   //display: CS-pin
 #define TFT_RST     9   //display: reset
@@ -49,17 +45,14 @@ const uint8_t VMCTR1 = 0xC5;            //VCOM Voltage setting
 //global variables
 uint8_t invState = 0;
 
-
-
 uint16_t dBuffer[128][160];
-
 
 void setContrast(uint8_t val) {
   SPI.beginTransaction(TFT_CS, settingsTFT);
   TFTwriteCommand(VMCTR1);
   SPI.transfer(TFT_CS, val);
   SPI.endTransaction();
-  }
+}
 
 void initBuffer() {
   for (uint16_t x = 0; x < 128; x++) {
@@ -68,7 +61,6 @@ void initBuffer() {
     }
   }
 }
-
 
 void writeBuffer() {
   uint8_t xs = 2;
@@ -109,7 +101,6 @@ void  setPixel(int x, int y, uint16_t color) {
 }
 
 uint16_t getColor(double r, double g, double b) {
-
   int red = (int) (r * 31);
   int green = (int) (g * 63);
   int blue = (int) (b * 31);
@@ -138,7 +129,8 @@ void TFTwriteCommand(uint8_t cmd) {
   TFT_DC_HIGH();
 }
 
-void TFTinit(void) {Serial.begin(9600);
+void TFTinit(void) {
+  Serial.begin(9600);
   //minimal configuration: only settings which are different from Reset Default Value
   //or not affected by HW/SW-reset
   SPI.beginTransaction(TFT_CS, settingsTFT);

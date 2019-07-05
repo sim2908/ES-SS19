@@ -1,4 +1,6 @@
 #include <DueTimer.h>
+#include <SPI.h>
+#include <SD.h>
 
 /*
    Display = 128 * 160
@@ -11,8 +13,8 @@
 
 */
 
-const uint16_t height = 160;
-const uint16_t width = 128;
+const uint16_t displayHeight = 160;
+const uint16_t displayWidth = 128;
 
 const uint16_t black = 0x0000;
 const uint16_t white = 0xFFFF;
@@ -20,9 +22,9 @@ const uint16_t white = 0xFFFF;
 DueTimer timer;
 int tCounter;
 
-
 void setup() {
   setupDisplay();
+  setupSDCard();
   initBuffer();
   writeBuffer();
 }
@@ -30,10 +32,6 @@ void setup() {
 void loop() {
   task4();
 }
-
-
-
-
 
 void task2() {
   for (int i = 0; i < 100; i++) {
@@ -50,7 +48,7 @@ void task2() {
 }
 
 void task22() {
-  for (int i = 0; i < width; i++) {
+  for (int i = 0; i < displayWidth; i++) {
     fillColumn(i, black);
     writeBuffer();
     delay(20);
@@ -58,7 +56,7 @@ void task22() {
 
   delay(1000);
 
-  for (int i = 0; i < width; i++) {
+  for (int i = 0; i < displayWidth; i++) {
     fillColumn(i, white);
     writeBuffer();
     delay(20);
@@ -97,7 +95,6 @@ void stopTimers() {
 }
 
 void task4() {
-
   String readInput;
   if (Serial.available() > 0) {
     readInput = Serial.readString();
@@ -120,7 +117,6 @@ void startRotatingBarDemo() {
 }
 
 void rotatingBarDemo() {
-
   int offsetY1 = 68;
   int offsetY2 = 76;
   int offsetY3 = 84;
@@ -159,7 +155,6 @@ void rotatingBarDemo() {
   writeStringCentered(s3, offsetY3);
 
   tCounter = (tCounter + 1) % 4;
-
 }
 
 
@@ -172,23 +167,27 @@ void rotatingBarDemo() {
 
 
 void printErrorMessage(String message) {
-	Serial.print("Error: ");
-	Serial.println(message);
+  Serial.print("Error: ");
+  Serial.println(message);
 }
 
 void printInfoMessage(String message) {
-	Serial.print("--- ");
-	Serial.print(message);
-	Serial.printön(" ---");
+  Serial.print("--- ");
+  Serial.print(message);
+  Serial.println(" ---");
 }
 
 void printHelpMessage() {
-	Serial.println("-----");
-	Serial.println("help() - Displays this message");
-	Serial.println("setContrast(val) - Sets the contrast to a value between 0 and 1");
-	Serial.println("clearDisplay() - Clears the display");
-	Serial.println("runRotatingBarDemo() - Starts the rotating bar demo");
-	Serial.println("runStudentIdDemo() - Starts the student ID demo");
-	Serial.println("stopDemo() - Stops any running demo");
-	Serial.println("-----");
+  Serial.println("-----");
+  Serial.println("help() - Displays this message");
+  Serial.println("setContrast(val) - Sets the contrast to a value between 0 and 1");
+  Serial.println("clearDisplay() - Clears the display");
+  Serial.println("runRotatingBarDemo() - Starts the rotating bar demo");
+  Serial.println("runStudentIdDemo() - Starts the student ID demo");
+  Serial.println("stopDemo() - Stops any running demo");
+  Serial.println("listDirectory(dir) - Lists the contents of the directory on the display");
+  Serial.println("doesFileExist(file) - Checks whether the given file exists");
+  Serial.println("outputFileToSerial(file) - Prints out the given file to serial");
+  Serial.println("outputFileToLCD(file) - Displays the given file on the display");
+  Serial.println("-----");
 }

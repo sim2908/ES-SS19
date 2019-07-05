@@ -12,11 +12,11 @@ void handleInput(String s) {
 
     if (val >= 0.0 && val <= 1.0) {
       //TODO: setContrast(val * );
-	  printInfoMessage("Contrast changed");
+      printInfoMessage("Contrast changed");
     } else if (val == -1.0) {
       printErrorMessage("Invalid contrast parameter");
     } else if (val < 0.0 || val > 1.0) {
-	  printErrorMessage("Contrast out of range");
+      printErrorMessage("Contrast out of range");
     }
   } else if (func == "clearDisplay") {
     initBuffer();
@@ -30,7 +30,47 @@ void handleInput(String s) {
     printInfoMessage("Started student ID demo");
   } else if (func == "stopDemo") {
     stopTimers();
-	printInfoMessage("Demo stopped");
+    printInfoMessage("Demo stopped");
+  } else if (func == "listDirectory") {
+    String fileName = param_buf[0];
+
+    if (fileName == "") {
+      printErrorMessage("File name empty");
+    } else {
+      listDirectory(fileName);
+      printInfoMessage("Listed directory");
+    }
+  } else if (func == "doesFileExist") {
+    String fileName = param_buf[0];
+
+    if (fileName == "") {
+      printErrorMessage("File name empty");
+    } else {
+      bool yes = doesFileExist(fileName);
+
+      if (yes) {
+        printInfoMessage("File does exist");
+      } else {
+        printInfoMessage("File does not exist");
+      }
+    }
+  } else if (func == "outputFileToSerial") {
+    String fileName = param_buf[0];
+
+    if (fileName == "") {
+      printErrorMessage("File name empty");
+    } else {
+      outputFileToSerial(fileName);
+    }
+  } else if (func == "outputFileToLCD") {
+    String fileName = param_buf[0];
+
+    if (fileName == "") {
+      printErrorMessage("File name empty");
+    } else {
+      outputFileToLCD(fileName);
+      printInfoMessage("Output file to LCD");
+    }
   } else if (func == "") {
     printErrorMessage("Invalid input - not a function call");
   } else {
@@ -49,7 +89,7 @@ String parseCall(String s, String param_buf[], int param_buf_len) {
 
     return "";
   } else if (param_end_idx + 1 != s.length()) {
-	  printErrorMessage("No characters after closing parentheses allowed");
+    printErrorMessage("No characters after closing parentheses allowed");
 
     return "";
   }
@@ -130,52 +170,3 @@ String getSerial() {
   return result;
 }
 
-
-
-
-
-
-//===================================================
-
-
-
-void outputImageToLCD(String image_data) {
-  String lines[2];
-  String dimensions[2];
-  String pixels[128 * 160];
-
-  if (splitString(image_data
-                  , "\n", lines, 2 == -1)) {
-    printErrorMessage("Invalid image data");
-
-    return;
-  }
-
-  if (splitString(lines[0], ",", dimensions, 2) != -1) {
-    printErrorMessage("Invalid image data");
-
-    return;
-  }
-
-  if (splitString(lines[1], ",", pixels, 128 * 160) != -1) {
-    printErrorMessage("Invalid image data");
-
-    return;
-  }
-
-  int width = dimensions[0].toInt();
-  int height = dimensions[1].toInt();
-
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      int idx = x + y * width;
-      int val = pixels[idx].toInt();
-
-      if (val == 1) {
-        //TODO: Implement
-      } else if (val == 0) {
-        //TODO: Implement
-      }
-    }
-  }
-}

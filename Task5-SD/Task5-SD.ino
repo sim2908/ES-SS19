@@ -23,7 +23,6 @@ void setup() {
 
 
 void loop () {
-
   String bla = readFileToString("smile2.img");
 
   Serial.println(bla);
@@ -42,26 +41,7 @@ void outputLineToSerial(File f) {
   Serial.println();
 }
 
-String readLineToString(File f) {
-  unsigned long fileSize = f.size();
-  char data[fileSize];
-  
-  char buf = f.read();
-  
-  int index = 0;
-
-  while(buf != -1 && index < fileSize) {
-    data[index] = buf;
-    buf = f.read();
-    index++;
-  }
-
-  String line = String(data);
-
-  return line;
-}
-
-String readTwoLinesToString(File f) {
+String readFileToString(File f) {
   unsigned long fileSize = f.size();
   char data[fileSize];
   
@@ -87,18 +67,9 @@ String readFileToString(String fileName) {
   }
 
   File f = SD.open(fileName);
+  String line = readFileToString(f);
 
-  if (fileName.endsWith(".txt")) {
-    String line = readLineToString(f);
-
-    return line;
-  } else if (fileName.endsWith(".img")) {
-    String line = readTwoLinesToString(f);
-
-    return line;
-  }
-
-  return "";
+  return line;
 }
 
 void outputFileToSerial(String fileName) {
@@ -129,7 +100,6 @@ void printFullDirectory() {
 void printDirectory(File dir, int numTabs) {
 
   while (true) {
-
     File entry =  dir.openNextFile();
     if (! entry) {
       // no more files

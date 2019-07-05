@@ -99,30 +99,55 @@ const unsigned char font[95][6] =
 
 const int offset = 32;
 
-
-int writeString(int x, int y, String s) {
+bool writeString(int x, int y, String s) {
   return writeString(x, y, s, black, white);
-  }
-
-int writeString(int x, int y, String s, uint16_t fgColor, uint16_t bgColor) {
-
-  int len = s.length();
-  for (int i = 0; i < len; i++) {
-    if (writeChar(x + (i * 6), y, s[i], fgColor, bgColor) == 1) {
-      return 1;
-    }
-
-  }
-  return 0;
 }
 
-int writeChar(int x, int y, char c) {
-  return writeChar(x, y, c, white, black);
+bool writeString(int x, int y, String s, uint16_t fgColor, uint16_t bgColor) {
+  int len = s.length();
+
+  for (int i = 0; i < len; i++) {
+    if (!writeChar(x + (i * 6), y, s[i], fgColor, bgColor)) {
+      return false;
+    }
   }
 
-int writeChar(int x, int y, char c, uint16_t fgColor, uint16_t bgColor) {
-  if (x > 122 || y > 154 ) {
-    return 1;
+  return true;
+}
+
+bool writeStringWithBreaks(int x, int y, String s) {
+  return writeStringWithBreaks(x, y, s, black, white);
+}
+
+bool writeStringWithBreaks(int x, int y, String s, uint16_t fgColor, uint16_t bgColor) {
+  int len = s.length();
+  int currentX = x;
+  int currentY = y;
+
+  for (int i = 0; i < len; i++) {
+    if (currentY > displayHeight) {
+      return false;
+    }
+    
+    if (!writeChar(currentX, currentY, s[i], fgColor, bgColor)) {
+      currentX = x;
+      currentY += 8;
+      i--;
+    } else {
+      currentX += 6;
+    }
+  }
+
+  return true;
+}
+
+bool writeChar(int x, int y, char c) {
+  return writeChar(x, y, c, white, black);
+}
+
+bool writeChar(int x, int y, char c, uint16_t fgColor, uint16_t bgColor) {
+  if (x > 122 || y > 154) {
+    return false;
   }
 
   unsigned char f[6];
@@ -145,13 +170,13 @@ int writeChar(int x, int y, char c, uint16_t fgColor, uint16_t bgColor) {
       setPixel(i + x, j + y, color);
     }
   }
-  return 0;
+
+  return true;
 }
 
 //Mitte = 64, 80
 
 void displayPattern(int offsetX, int offsetY) {
-
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < 10; j++) {
       setPixel(i + offsetX, j + offsetY, black);
@@ -160,29 +185,28 @@ void displayPattern(int offsetX, int offsetY) {
 }
 
 void fillColumn(int column, uint16_t color) {
-  for (int i = 0; i < height; i++) {
+  for (int i = 0; i < displayHeight; i++) {
     setPixel(column, i, color);
   }
 }
 
 void fillRow(int row, uint16_t color) {
-  for (int i = 0; i < width; i++) {
+  for (int i = 0; i < displayWidth; i++) {
     setPixel(i, row, color);
   }
 }
 
 void runStudentIdDemo(String n, String id) {
-
   int offsetY1 = 70;
   int offsetY2 = 83;
 
   writeStringCentered(n, offsetY1);
   writeStringCentered(id, offsetY2);
-  
-  }
+
+}
 
 void writeStringCentered(String s, int offsetY) {
-  int x = (width / 2) - (s.length() * 6 / 2);
+  int x = (displayWidth / 2) - (s.length() * 6 / 2);
   writeString(x, offsetY, s);
-  }
+}
 
