@@ -1,8 +1,25 @@
 void debounceButtons(void) {
 
-/*
-* LED - RST - JOY - PLAY
-*/
+  if (playFlag) {
+
+    if (timeCounter > ((pos_pointer - 1) * 50 * 3 )) {
+      timeCounter = 0;
+      reportPos();
+
+      playFlag = false;
+      return;
+    }
+
+    if (timeCounter % 3 == 0) {
+      moveToPosition(timeCounter / 3);
+    }
+
+    timeCounter++;
+    return;
+  }
+  /*
+    LED - RST - JOY - PLAY
+  */
 
   int led_state = digitalRead(ledButton);
 

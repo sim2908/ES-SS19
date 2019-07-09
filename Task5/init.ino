@@ -47,7 +47,7 @@ uint8_t invState = 0;
 
 uint16_t dBuffer[128][160];
 
-void setContrast(uint8_t val) {
+void setContrast(byte val) {
   SPI.beginTransaction(TFT_CS, settingsTFT);
   TFTwriteCommand(VMCTR1);
   SPI.transfer(TFT_CS, val);

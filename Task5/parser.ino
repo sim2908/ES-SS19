@@ -11,7 +11,7 @@ void handleInput(String s) {
     float val = toValidatedFloat(param);
 
     if (val >= 0.0 && val <= 1.0) {
-      //TODO: setContrast(val * );
+      setContrast((uint8_t) (val * 255));
       printInfoMessage("Contrast changed");
     } else if (val == -1.0) {
       printErrorMessage("Invalid contrast parameter");

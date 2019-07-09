@@ -90,10 +90,10 @@ void listDirectory(String fileName) {
 void outputFileToLCD(String fileName) {
   String content = readFileToString(fileName);
 
-  if (fileName.endsWith(".txt")) {
+  if (fileName.endsWith(".txt") || fileName.endsWith(".TXT")) {
     content.replace("\n", "");
     outputTextToLCD(content);
-  } else if (fileName.endsWith(".img")) {
+  } else if (fileName.endsWith(".img") || fileName.endsWith(".IMG")) {
     outputImageToLCD(content);
   } else {
     printErrorMessage("Unrecognized file format");
